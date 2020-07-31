@@ -1,0 +1,50 @@
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
+
+#define PIN 0
+
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, PIN, NEO_GRB + NEO_KHZ800);
+
+uint32_t color1 = strip.Color(255,20,147);
+uint32_t color2 = strip.Color(0, 0, 255);
+
+uint32_t color3 = strip.Color(255,105,180);
+uint32_t color4 = strip.Color(51, 51, 250);
+
+void setup()
+{
+  #if defined (__AVR_ATtiny85__)
+    if (F_CPU == 16000000)
+      {
+        clock_prescale_set(clock_div_1);
+      }
+  #endif
+  // End of trinket special code
+  
+    strip.begin();
+    strip.setBrightness(50);
+    strip.show();   // Initialize all pixels to 'OFF';
+
+}
+
+void loop()
+{
+  for(uint16_t i = 0; i < 100; i++)
+  {
+  colorWipe(color1, color2, 50);     // ColorSet1
+  colorWipe(color3, color4, 50);     // ColorSet2
+  }
+}
+
+void colorWipe(uint32_t c1, uint32_t c2, uint8_t wait) 
+{
+  for(uint16_t i = 0; i < 16; i++) 
+  {
+    strip.setPixelColor(i, c2);
+    strip.setPixelColor(i + 16, c1);
+    strip.show();
+    delay(wait);
+  }
+}
